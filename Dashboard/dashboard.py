@@ -22,6 +22,27 @@ st.set_page_config(
 )
 
 # =========================================================
+# CUSTOM CSS
+# =========================================================
+st.markdown("""
+<style>
+.main-header {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem 0;
+}
+.insight-box {
+    background-color: #e8f4f8;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid #2ecc71;
+    margin: 1rem 0;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# =========================================================
 # LOAD DATA
 # =========================================================
 @st.cache_data
@@ -33,11 +54,10 @@ def load_data():
 
     df['year'] = df['dteday'].dt.year
     df['month'] = df['dteday'].dt.month
-    df['day_of_week'] = df['dteday'].dt.dayofweek
 
     season_labels = {1: 'Spring', 2: 'Summer', 3: 'Fall', 4: 'Winter'}
     weather_labels = {1: 'Clear', 2: 'Mist', 3: 'Light Snow/Rain', 4: 'Heavy Rain/Snow'}
-    weekday_labels = {0: 'Senin', 1: 'Selasa', 2: 'Rabu', 3: 'Kamis', 
+    weekday_labels = {0: 'Senin', 1: 'Selasa', 2: 'Rabu', 3: 'Kamis',
                       4: 'Jumat', 5: 'Sabtu', 6: 'Minggu'}
 
     df['season_label'] = df['season'].map(season_labels)
@@ -60,7 +80,6 @@ with st.sidebar:
     st.image("https://img.icons8.com/color/96/000000/bicycle.png", width=80)
     st.title("🚴 Analisis Bike Sharing")
 
-    st.markdown("---")
     st.header("Filter")
 
     years = sorted(df['year'].unique())
@@ -70,7 +89,7 @@ with st.sidebar:
     selected_season = st.multiselect("Pilih Musim", seasons, default=seasons)
 
     weather_conditions = df['weather_label'].unique()
-    selected_weather = st.multiselect("Pilih Kondisi Cuaca", weather_conditions, default=weather_conditions)
+    selected_weather = st.multiselect("Pilih Cuaca", weather_conditions, default=weather_conditions)
 
     working_day_option = st.radio("Tipe Hari", ["Semua", "Hari Kerja", "Hari Libur"])
 
@@ -96,10 +115,11 @@ elif working_day_option == "Hari Libur":
 # =========================================================
 # HEADER
 # =========================================================
-st.markdown('<h1 style="text-align:center;">🚴 Dashboard Analisis Bike Sharing</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">🚴 Dashboard Analisis Bike Sharing</h1>', unsafe_allow_html=True)
+st.markdown("---")
 
 # =========================================================
-# METRIC
+# METRIC UTAMA
 # =========================================================
 col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -115,8 +135,10 @@ col3.metric("Pengguna Kasual %", f"{casual_pct:.1f}%")
 col4.metric("Pengguna Terdaftar %", f"{registered_pct:.1f}%")
 col5.metric("Jam Puncak", f"{peak_hour}:00")
 
+st.markdown("---")
+
 # =========================================================
-# TAB
+# TABS
 # =========================================================
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "📊 Ringkasan",
@@ -155,32 +177,12 @@ with tab1:
         st.plotly_chart(fig, use_container_width=True)
 
 # =========================================================
-# TAB 2 — ANALISIS WAKTU
-# =========================================================
-with tab2:
-    st.header("⏰ Analisis Waktu")
-
-    hourly_avg = filtered_df.groupby('hr')[['casual', 'registered', 'cnt']].mean().reset_index()
-
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=hourly_avg['hr'], y=hourly_avg['casual'], name='Kasual'))
-    fig.add_trace(go.Scatter(x=hourly_avg['hr'], y=hourly_avg['registered'], name='Terdaftar'))
-    fig.add_trace(go.Scatter(x=hourly_avg['hr'], y=hourly_avg['cnt'], name='Total'))
-
-    fig.update_layout(
-        title='Rata-rata Peminjaman per Jam',
-        xaxis_title='Jam',
-        yaxis_title='Rata-rata Peminjaman'
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-# =========================================================
 # TAB 3 — DAMPAK CUACA
 # =========================================================
 with tab3:
     st.header("🌤️ Analisis Dampak Cuaca")
 
-    weather_avg = filtered_df.groupby('weather_label')[['casual', 'registered']].mean().reset_index()
+    weather_avg = filtered_df.groupby('weather_label')[['casual', 'registered', 'cnt']].mean().reset_index()
 
     fig = go.Figure()
     fig.add_bar(x=weather_avg['weather_label'], y=weather_avg['casual'], name='Kasual')
@@ -191,31 +193,16 @@ with tab3:
         xaxis_title='Kondisi Cuaca',
         yaxis_title='Rata-rata Peminjaman'
     )
-    st.plotly_chart(fig, use_container_width=True)
 
-# =========================================================
-# TAB 4 — SEGMENTASI
-# =========================================================
-with tab4:
-    st.header("👥 Segmentasi Pengguna")
-
-    total_casual = filtered_df['casual'].sum()
-    total_registered = filtered_df['registered'].sum()
-
-    fig = go.Figure(data=[go.Pie(
-        labels=['Kasual', 'Terdaftar'],
-        values=[total_casual, total_registered],
-        hole=.4
-    )])
-
-    fig.update_layout(title='Proporsi Total Pengguna')
     st.plotly_chart(fig, use_container_width=True)
 
 # =========================================================
 # FOOTER
 # =========================================================
 st.markdown("---")
-st.markdown(
-    "<div style='text-align:center;'>🚴 Dashboard Analisis Bike Sharing — Streamlit</div>",
-    unsafe_allow_html=True
-)
+st.markdown("""
+<div style='text-align: center; color: #666;'>
+    <p>🚴 Dashboard Analisis Bike Sharing | Dibuat dengan Streamlit & Plotly</p>
+    <p>Insight berbasis data untuk operasional bike sharing</p>
+</div>
+""", unsafe_allow_html=True)
