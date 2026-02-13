@@ -6,14 +6,12 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA   
+from sklearn.decomposition import PCA
 import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-# =========================================================
-# KONFIGURASI HALAMAN
-# =========================================================
+# ================= PAGE CONFIG =================
 st.set_page_config(
     page_title="Dashboard Analisis Bike Sharing",
     page_icon="🚴",
@@ -21,9 +19,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# =========================================================
-# CUSTOM CSS
-# =========================================================
+# ================= CSS =================
 st.markdown("""
 <style>
 .main-header {
@@ -42,9 +38,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# =========================================================
-# LOAD DATA
-# =========================================================
+# ================= LOAD DATA =================
 @st.cache_data
 def load_data():
     df = pd.read_csv('Dataset/processed_hour.csv')
@@ -73,9 +67,7 @@ def load_data():
 
 df = load_data()
 
-# =========================================================
-# SIDEBAR
-# =========================================================
+# ================= SIDEBAR =================
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/000000/bicycle.png", width=80)
     st.title("🚴 Analisis Bike Sharing")
@@ -93,9 +85,7 @@ with st.sidebar:
 
     working_day_option = st.radio("Tipe Hari", ["Semua", "Hari Kerja", "Hari Libur"])
 
-# =========================================================
-# FILTER DATA
-# =========================================================
+# ================= FILTER DATA =================
 filtered_df = df.copy()
 
 if selected_year:
@@ -112,15 +102,11 @@ if working_day_option == "Hari Kerja":
 elif working_day_option == "Hari Libur":
     filtered_df = filtered_df[filtered_df['workingday'] == 0]
 
-# =========================================================
-# HEADER
-# =========================================================
+# ================= HEADER =================
 st.markdown('<h1 class="main-header">🚴 Dashboard Analisis Bike Sharing</h1>', unsafe_allow_html=True)
 st.markdown("---")
 
-# =========================================================
-# METRIC UTAMA
-# =========================================================
+# ================= METRIC =================
 col1, col2, col3, col4, col5 = st.columns(5)
 
 total_rentals = filtered_df['cnt'].sum()
@@ -137,9 +123,7 @@ col5.metric("Jam Puncak", f"{peak_hour}:00")
 
 st.markdown("---")
 
-# =========================================================
-# TABS
-# =========================================================
+# ================= TABS =================
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "📊 Ringkasan",
     "⏰ Analisis Waktu",
@@ -148,9 +132,7 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "🎯 Klasterisasi"
 ])
 
-# =========================================================
-# TAB 1 — RINGKASAN
-# =========================================================
+# ================= TAB 1 =================
 with tab1:
     st.header("📊 Ringkasan & Insight Utama")
 
@@ -158,7 +140,6 @@ with tab1:
 
     with col1:
         daily_data = filtered_df.groupby('dteday')['cnt'].sum().reset_index()
-
         fig = px.line(daily_data, x='dteday', y='cnt',
                       title='Tren Peminjaman Harian',
                       labels={'dteday': 'Tanggal', 'cnt': 'Total Peminjaman'})
@@ -169,40 +150,29 @@ with tab1:
         fig.add_trace(go.Box(y=filtered_df['cnt'], name='Total'))
         fig.add_trace(go.Box(y=filtered_df['casual'], name='Kasual'))
         fig.add_trace(go.Box(y=filtered_df['registered'], name='Terdaftar'))
-
-        fig.update_layout(
-            title='Distribusi Peminjaman Berdasarkan Tipe Pengguna',
-            yaxis_title='Jumlah Peminjaman'
-        )
+        fig.update_layout(title='Distribusi Peminjaman Berdasarkan Tipe Pengguna')
         st.plotly_chart(fig, use_container_width=True)
 
-# =========================================================
-# TAB 3 — DAMPAK CUACA
-# =========================================================
-with tab3:
-    st.header("🌤️ Analisis Dampak Cuaca")
+    st.markdown('<div class="insight-box">', unsafe_allow_html=True)
+    st.subheader("🔍 Insight Bisnis Utama")
 
-    weather_avg = filtered_df.groupby('weather_label')[['casual', 'registered', 'cnt']].mean().reset_index()
+    col1, col2, col3 = st.columns(3)
 
-    fig = go.Figure()
-    fig.add_bar(x=weather_avg['weather_label'], y=weather_avg['casual'], name='Kasual')
-    fig.add_bar(x=weather_avg['weather_label'], y=weather_avg['registered'], name='Terdaftar')
+    with col1:
+        st.markdown("**🎯 Performa Musim**")
+        best_season = filtered_df.groupby('season_label')['cnt'].mean().idxmax()
+        best_season_avg = filtered_df.groupby('season_label')['cnt'].mean().max()
+        st.write(f"• Musim Terbaik: {best_season}")
+        st.write(f"• Rata-rata Peminjaman: {best_season_avg:.0f}")
 
-    fig.update_layout(
-        title='Rata-rata Peminjaman Berdasarkan Cuaca',
-        xaxis_title='Kondisi Cuaca',
-        yaxis_title='Rata-rata Peminjaman'
-    )
+    with col2:
+        st.markdown("**⚡ Pola Penggunaan**")
+        peak_hours = filtered_df.groupby('hr')['cnt'].mean().nlargest(3)
+        st.write(f"• Jam Tertinggi: {', '.join([f'{h}:00' for h in peak_hours.index])}")
 
-    st.plotly_chart(fig, use_container_width=True)
+    with col3:
+        st.markdown("**🌤️ Pengaruh Cuaca**")
+        best_weather = filtered_df.groupby('weather_label')['cnt'].mean().idxmax()
+        st.write(f"• Cuaca Terbaik: {best_weather}")
 
-# =========================================================
-# FOOTER
-# =========================================================
-st.markdown("---")
-st.markdown("""
-<div style='text-align: center; color: #666;'>
-    <p>🚴 Dashboard Analisis Bike Sharing | Dibuat dengan Streamlit & Plotly</p>
-    <p>Insight berbasis data untuk operasional bike sharing</p>
-</div>
-""", unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
