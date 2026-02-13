@@ -119,7 +119,7 @@ with st.sidebar:
     selected_weather = st.multiselect("Pilih Cuaca", weather_conditions, default=weather_conditions)
     
     # Working day filter
-    working_day_option = st.radio("Pilih Hari", ["Semua", "Hari Kerja", "Hari Libur"])
+    working_day_option = st.radio("Day Type", ["All", "Working Day", "Holiday"])
     
     st.markdown("---")
     
