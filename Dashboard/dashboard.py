@@ -64,7 +64,7 @@ def load_data():
     
     # Labels
     season_labels = {1: 'Semi', 2: 'Hujan', 3: 'Panas', 4: 'Salju'}
-    weather_labels = {1: 'Ekstrem', 2: 'Kabut', 3: 'Salju Ringan/Hujan', 4: 'Dingin'}
+    weather_labels = {1: 'Cerah', 2: 'Berkabut', 3: 'Hujan Ringan/Salju', 4: 'Hujan Lebat'}
     weekday_labels = {0: 'Senin', 1: 'Selasa', 2: 'Rabu', 3: 'Kamis', 
                       4: 'Jumat', 5: 'Sabtu', 6: 'Minggu'}
     
