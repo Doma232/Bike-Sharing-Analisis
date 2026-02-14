@@ -1,14 +1,15 @@
 ## 🤝 Kontribusi Kelompok <br>
-10124011 - Amhar Razka Ariyanto <br> 
-10124025 - Rafli Zeirofi <br>
-10124041 - Ryan Setiawan <br>
-10124042 - Jaifar Husnayan Hakim <br>
-10124043 - Aditia Pramudia <br>
-10124475 - Daffa Rizky Ramadhan <br>
+10124011 - Amhar Razka Ariyanto " Project Coordinator & Quality Control "<br> 
+10124025 - Rafli Zeirofi Dokumentasi Notebook<br>
+10124041 - Ryan Setiawan " Dashboard Streamlit " <br>
+10124042 - Jaifar Husnayan Hakim " Analis Data Notebook "<br>
+10124043 - Aditia Pramudia Video youtube<br>
+10124475 - Daffa Rizky Ramadhan Github & Testing<br>
 
 # 🚴 Bike Sharing Analytics Dashboard
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](your-dashboard-url-here)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://bike-sharing-kelompok-04.streamlit.app/)
+[URL-Youtube] (https://youtu.be/gzmOVKpgduE)
 
 ## 📋 Project Overview
 
