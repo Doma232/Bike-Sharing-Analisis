@@ -8,7 +8,7 @@
 
 # 🚴 Bike Sharing Analytics Dashboard
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://bike-sharing-kelompok-04.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)]<br>(https://bike-sharing-kelompok-04.streamlit.app/)
 [URL-Youtube] (https://youtu.be/gzmOVKpgduE)
 
 ## 📋 Project Overview
