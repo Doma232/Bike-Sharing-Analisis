@@ -1,10 +1,10 @@
 ## 🤝 Kontribusi Kelompok <br>
 10124011 - Amhar Razka Ariyanto " Project Coordinator & Quality Control "<br> 
-10124025 - Rafli Zeirofi Dokumentasi Notebook<br>
+10124025 - Rafli Zeirofi " Dokumentasi Notebook "<br>
 10124041 - Ryan Setiawan " Dashboard Streamlit " <br>
 10124042 - Jaifar Husnayan Hakim " Analis Data Notebook "<br>
-10124043 - Aditia Pramudia Video youtube<br>
-10124475 - Daffa Rizky Ramadhan Github & Testing<br>
+10124043 - Aditia Pramudia " Video youtube "<br>
+10124475 - Daffa Rizky Ramadhan " Github & Testing "<br>
 
 # 🚴 Bike Sharing Analytics Dashboard
 
